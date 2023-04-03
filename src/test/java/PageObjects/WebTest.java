@@ -1,17 +1,12 @@
 package PageObjects;
 
-import Runners.Run;
-import io.cucumber.java.Before;
 import io.github.bonigarcia.wdm.WebDriverManager;
-
 import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
 import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -68,8 +63,6 @@ public class WebTest {
         SearchContext shadowDom = root.getShadowRoot();
         WebElement ourModelsBtn = shadowDom.findElement(By.cssSelector("ul[label='Menubar'] button:first-of-type"));
         ourModelsBtn.click();
-
-
         Thread.sleep(1000);
 
         //Hatchbacks click
@@ -81,20 +74,44 @@ public class WebTest {
         hatchbackOption.click();
         Thread.sleep(1000);
 
-
         //A-Class Hatchback element
-        WebElement root3 = context2.findElement(By.cssSelector("div#app-vue owc-header-flyout"));
-        SearchContext context3 = root3.getShadowRoot();
-        WebElement prueba1 = context3.findElement(By.cssSelector("ul:first-child"));
+       // WebElement aClass = context2.findElement(By.cssSelector("div#app-vue owc-header-flyout ul[slot='seamless-vmos-flyout']")); //si
+       WebElement aClass = context2.findElement(By.cssSelector("div#app-vue owc-header-flyout ul[slot='seamless-vmos-flyout'] a[href='https://www.mercedes-benz.co.uk/passengercars/models/hatchback/a-class/overview.html']")); //si
+       aClass.click();
+
+        //Build your car
+        WebElement root3 = new WebDriverWait(driver, Duration.ofSeconds(10), Duration.ofSeconds(10)).until(ExpectedConditions.visibilityOfElementLocated(By.tagName("owc-stage")));
+        SearchContext shadowDom2 = root3.getShadowRoot();
+        WebElement buildYourCarBtn = shadowDom2.findElement(By.cssSelector("a.owc-stage-cta-buttons__button.wb-button.wb-button--medium.wb-button--theme-dark.wb-button--large.wb-button--secondary.owc-stage-cta-buttons__button--secondary"));//no
+        buildYourCarBtn.click();
         Thread.sleep(1000);
-       // js.executeScript("vmos-flyout-1.10.1.min.js", prueba1);
-        //script seamless-vmos-flyout
-        //vmos-flyout-1.10.1.min.js
-        //WebElement slot = context3.findElement(By.cssSelector(".owc-header-flyout__navigation-list slot")); //si
-        //WebElement element5 = (WebElement)  ((JavascriptExecutor) driver).executeScript("return arguments[0].click()",slot); //si
-        //slot projection in static HTML
-        //NEXT ELEMENT TO REACH
-        //WebElement test = driver.findElement(By.cssSelector("a[class='@vmos-vmos-flyout-flyout-group-item__link__NeNLP'][href='https://www.mercedes-benz.co.uk/passengercars/models/hatchback/a-class/overview.html']"));
+
+        //Fuel Type dropdown
+        WebElement root4 = new WebDriverWait(driver, Duration.ofSeconds(10), Duration.ofSeconds(10)).until(ExpectedConditions.visibilityOfElementLocated(By.tagName("owcc-car-configurator")));
+        SearchContext shadowDom4 = root4.getShadowRoot();
+
+        WebElement onlineText = shadowDom4.findElement(By.cssSelector("cc-motorization"));
+        js.executeScript("arguments[0].scrollIntoView();", onlineText);
+        WebElement root5 = shadowDom4.findElement(By.cssSelector("ccwb-multi-select"));
+
+        SearchContext shadowDom5 = root5.getShadowRoot();
+        WebElement fuelType = shadowDom5.findElement(By.cssSelector("button.button[aria-label='Fuel type, selected 0 items']"));
+        Thread.sleep(1000);
+        fuelType.click();
+        Thread.sleep(1000);
+
+        //Diesel option
+        WebElement diesel = shadowDom4.findElement(By.cssSelector("ccwb-checkbox:first-of-type"));
+        SearchContext dieselShadowDom = diesel.getShadowRoot();
+
+        WebElement dieselInput = dieselShadowDom.findElement(By.cssSelector("ccwb-icon"));
+        SearchContext dieselCheckboxShadowDom = dieselInput.getShadowRoot();
+        WebElement dieselCheckbox = dieselCheckboxShadowDom.findElement(By.cssSelector("svg"));
+        Actions action = new Actions(driver);
+        action.click(dieselCheckbox).build().perform();
+        Thread.sleep(1000);
+
+        //Save the value “£” of the highest and lowest price results in a text file
 
     }
 
