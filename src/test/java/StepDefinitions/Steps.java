@@ -47,14 +47,15 @@ public class Steps {
         webTest.selectCarModel();
     }
     @When("Build your car")
-    public void build_your_car() {
+    public void build_your_car() throws InterruptedException {
         // Write code here that turns the phrase above into concrete actions
-        System.out.print("y");
+        webTest.buildYourCar();
     }
     @Then("find the prices list")
-    public void find_the_prices_list() {
+    public void find_the_prices_list() throws Exception {
         // Write code here that turns the phrase above into concrete actions
-        System.out.print("z");
+        webTest.getCarLowPrice();
+        webTest.getCarHighPrice();
     }
 
 

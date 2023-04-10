@@ -1,12 +1,15 @@
 package PageObjects;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.io.File;
 import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -47,8 +50,8 @@ public class WebTest {
     }
 
     public void selectCarModel() throws Exception {
+        //popup Cookies
         List<WebElement> lstElem = driver.findElements(By.tagName("cmm-cookie-banner"));
-
         for (WebElement webElement : lstElem) {
             driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
             Thread.sleep(1000);
@@ -79,6 +82,25 @@ public class WebTest {
        WebElement aClass = context2.findElement(By.cssSelector("div#app-vue owc-header-flyout ul[slot='seamless-vmos-flyout'] a[href='https://www.mercedes-benz.co.uk/passengercars/models/hatchback/a-class/overview.html']")); //si
        aClass.click();
 
+    }
+
+
+
+    public static void takeSnapShot(WebDriver webdriver,String fileWithPath) throws Exception{
+        //Convert web driver object to TakeScreenshot
+        TakesScreenshot scrShot =((TakesScreenshot)webdriver);
+        //Call getScreenshotAs method to create image file
+        File SrcFile=scrShot.getScreenshotAs(OutputType.FILE);
+        //Move image file to new destination
+        File DestFile=new File(fileWithPath);
+        //Copy file at destination
+        FileUtils.copyFile(SrcFile, DestFile);
+    }
+
+
+
+    public void buildYourCar() throws InterruptedException {
+
         //Build your car
         WebElement root3 = new WebDriverWait(driver, Duration.ofSeconds(10), Duration.ofSeconds(10)).until(ExpectedConditions.visibilityOfElementLocated(By.tagName("owc-stage")));
         SearchContext shadowDom2 = root3.getShadowRoot();
@@ -87,12 +109,13 @@ public class WebTest {
         Thread.sleep(1000);
 
         //Fuel Type dropdown
-        WebElement root4 = new WebDriverWait(driver, Duration.ofSeconds(10), Duration.ofSeconds(10)).until(ExpectedConditions.visibilityOfElementLocated(By.tagName("owcc-car-configurator")));
-        SearchContext shadowDom4 = root4.getShadowRoot();
+        WebElement rootConfigurator = new WebDriverWait(driver, Duration.ofSeconds(10), Duration.ofSeconds(10)).until(ExpectedConditions.visibilityOfElementLocated(By.tagName("owcc-car-configurator")));
+        SearchContext shadowDomConfigurator = rootConfigurator.getShadowRoot();
 
-        WebElement onlineText = shadowDom4.findElement(By.cssSelector("cc-motorization"));
+        WebElement onlineText = shadowDomConfigurator.findElement(By.cssSelector("cc-motorization"));
+        JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript("arguments[0].scrollIntoView();", onlineText);
-        WebElement root5 = shadowDom4.findElement(By.cssSelector("ccwb-multi-select"));
+        WebElement root5 = shadowDomConfigurator.findElement(By.cssSelector("ccwb-multi-select"));
 
         SearchContext shadowDom5 = root5.getShadowRoot();
         WebElement fuelType = shadowDom5.findElement(By.cssSelector("button.button[aria-label='Fuel type, selected 0 items']"));
@@ -101,7 +124,7 @@ public class WebTest {
         Thread.sleep(1000);
 
         //Diesel option
-        WebElement diesel = shadowDom4.findElement(By.cssSelector("ccwb-checkbox:first-of-type"));
+        WebElement diesel = shadowDomConfigurator.findElement(By.cssSelector("ccwb-checkbox:first-of-type"));
         SearchContext dieselShadowDom = diesel.getShadowRoot();
 
         WebElement dieselInput = dieselShadowDom.findElement(By.cssSelector("ccwb-icon"));
@@ -111,8 +134,26 @@ public class WebTest {
         action.click(dieselCheckbox).build().perform();
         Thread.sleep(1000);
 
-        //Save the value “£” of the highest and lowest price results in a text file
+        //Hide Dropdown
+        WebElement headerText = shadowDomConfigurator.findElement(By.cssSelector("cc-motorization ccwb-heading"));
+        headerText.click();
 
     }
 
+    public void getCarLowPrice() throws Exception {
+        //Take and save a screenshot of the results
+        this.takeSnapShot(driver, "c://test.png");
+
+        //lowest price
+        WebElement rootConfigurator = new WebDriverWait(driver, Duration.ofSeconds(10), Duration.ofSeconds(10)).until(ExpectedConditions.visibilityOfElementLocated(By.tagName("owcc-car-configurator")));
+        SearchContext shadowDomConfigurator = rootConfigurator.getShadowRoot();
+        WebElement rootCard = shadowDomConfigurator.findElement(By.cssSelector("cc-motorization ccwb-card ccwb-text span"));
+        String lowestPrice = rootCard.getText();
+
+        System.out.println(lowestPrice);
+        //Save the value “£” of the highest and lowest price results in a text file
+    }
+
+    public void getCarHighPrice() {
+    }
 }
