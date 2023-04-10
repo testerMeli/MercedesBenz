@@ -140,6 +140,7 @@ public class WebTest {
     }
 
     public void getCarLowPrice() throws Exception {
+
         //Take and save a screenshot of the results
         this.takeSnapShot(driver, "c://test.png");
 
