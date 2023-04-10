@@ -56,7 +56,7 @@ public class WebTest {
             driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
             Thread.sleep(1000);
             SearchContext context = webElement.getShadowRoot();
-            WebElement agreeBtn = context.findElement(By.cssSelector("cmm-buttons-wrapper.hydrated button[data-test='handle-accept-all-button']"));//locatoR good!
+            WebElement agreeBtn = context.findElement(By.cssSelector("cmm-buttons-wrapper.hydrated button[data-test='handle-accept-all-button']"));
             agreeBtn.click();
             Thread.sleep(1000);
         }
@@ -78,8 +78,7 @@ public class WebTest {
         Thread.sleep(1000);
 
         //A-Class Hatchback element
-       // WebElement aClass = context2.findElement(By.cssSelector("div#app-vue owc-header-flyout ul[slot='seamless-vmos-flyout']")); //si
-       WebElement aClass = context2.findElement(By.cssSelector("div#app-vue owc-header-flyout ul[slot='seamless-vmos-flyout'] a[href='https://www.mercedes-benz.co.uk/passengercars/models/hatchback/a-class/overview.html']")); //si
+       WebElement aClass = context2.findElement(By.cssSelector("div#app-vue owc-header-flyout ul[slot='seamless-vmos-flyout'] a[href='https://www.mercedes-benz.co.uk/passengercars/models/hatchback/a-class/overview.html']"));
        aClass.click();
 
     }
@@ -104,7 +103,7 @@ public class WebTest {
         //Build your car
         WebElement root3 = new WebDriverWait(driver, Duration.ofSeconds(10), Duration.ofSeconds(10)).until(ExpectedConditions.visibilityOfElementLocated(By.tagName("owc-stage")));
         SearchContext shadowDom2 = root3.getShadowRoot();
-        WebElement buildYourCarBtn = shadowDom2.findElement(By.cssSelector("a.owc-stage-cta-buttons__button.wb-button.wb-button--medium.wb-button--theme-dark.wb-button--large.wb-button--secondary.owc-stage-cta-buttons__button--secondary"));//no
+        WebElement buildYourCarBtn = shadowDom2.findElement(By.cssSelector("a.owc-stage-cta-buttons__button.wb-button.wb-button--medium.wb-button--theme-dark.wb-button--large.wb-button--secondary.owc-stage-cta-buttons__button--secondary"));
         buildYourCarBtn.click();
         Thread.sleep(1000);
 
@@ -151,7 +150,7 @@ public class WebTest {
         String lowestPrice = rootCard.getText();
 
         System.out.println(lowestPrice);
-        //Save the value “£” of the highest and lowest price results in a text file
+
     }
 
     public void getCarHighPrice() {
